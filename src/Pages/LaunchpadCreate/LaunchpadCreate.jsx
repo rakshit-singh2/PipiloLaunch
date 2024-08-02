@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Step1 from '../../Components/LaunchpadCreateForms/Step1/Step1';
 import Step2 from '../../Components/LaunchpadCreateForms/Step2/Step2';
 import Step3 from '../../Components/LaunchpadCreateForms/Step3/Step3';
-import { Card, Form } from 'react-bootstrap';
+import { Button, Card, Form } from 'react-bootstrap';
 import Progress from '../../Components/Progress/Progress';
 import { useReconnect } from 'wagmi';
 
@@ -44,17 +44,22 @@ const LaunchpadCreate = () => {
   const handleNext = () => {
     if (step === 1 && tokenAddress.trim() === '') {
       setError('Token address cannot be blank');
+      console.log({ error })
     } else if (step === 2 && presaleRate.trim() === '') {
       setError('Presale rate cannot be blank');
+      console.log({ error })
     } else if (step === 3 && description.trim() === '') {
       setError('Description cannot be blank');
+      console.log({ error })
     } else {
       setError('');
       setStep(step + 1);
+      console.log({ step })
     }
   };
 
-  const handlePrevious = () => setStep(step - 1);
+  const handlePrevious = () => { setStep(step - 1) };
+  const handleSubmit = () => { setStep(1) };
 
   return (
     <Card style={{ width: '100%', maxWidth: '600px', margin: 'auto', marginTop: '20px' }}>
@@ -131,6 +136,14 @@ const LaunchpadCreate = () => {
               handlePrevious={handlePrevious}
               handleNext={handleNext}
             />
+          )}
+          {step === 4 && (
+            <>
+
+              <Button variant="primary" onClick={handleSubmit}>
+                Submit
+              </Button>
+            </>
           )}
         </Form>
       </Card.Body>

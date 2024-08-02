@@ -8,6 +8,34 @@
   @media (max-width: 992px) {
     .navbar-brand img {
       width: 3rem;
-      height: 2.5rem;
+      
     }
   }
+
+
+.navbar button{ background:none; border:none;}
+#navbarNav .btn { background:none; border:none;}
+.connectionbutton button{background:#c79500 !important;}
+.mainmenu{padding: 0px 15px !important;}
+.collapse{display:block !important;}
+.fixed-top{position: inherit;}
+#navbarNav .btn{display: table;}
+.connectionbutton{margin-top: 10px;}
+.dropdown-menu.show { display: block; background: #f5f5f5; border: none; border-radius: 0px; margin:0px; padding:0px;}
+.dropdown-item{ border-bottom:1px solid #ddd;padding: 11px 15px;}
+.dropdown-item:hover{background: #c79500 !important; color:#fff;}
+.topnav svg{color:#f3b600;}
+.dropdown-toggle::after{vertical-align: inherit;}
+.iekbcc0{border-color:#ffd351 !important;}
+
+@media only screen and (max-width: 600px) {
+  .topnav{ padding:20px 15px !important;}
+  #navbarNav .btn{width: 100%; text-align: left; border-bottom: 1px solid #3c3c3c; border-radius: 0px;}
+}
+
+
+
+
+
+
+

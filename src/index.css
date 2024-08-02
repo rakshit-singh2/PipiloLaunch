@@ -1,0 +1,9 @@
+body{background:#fffcf4;}
+.card-body button{background: #c79500 !important; border: none;}
+.progress-bar{background: #c79500 !important;}
+.form-check-input:checked {background-color: #c79500; border-color: #c79500;}
+main{margin-top:0px !important;  padding:40px 20px;  }
+.card{ border:none; box-shadow: 1px 1px 31px #ddd;}
+[data-rk] .ju367v6 {
+    display: grid;
+}

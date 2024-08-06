@@ -6,12 +6,12 @@ import { useAccount } from 'wagmi';
 import { readContract } from '@wagmi/core';
 import { wagmiconfig } from '../../../wagmiconfig/wagmiconfig';
 
-const Step1 = ({ setStep, setDescription }) => {
+const Step1 = ({ description, setDescription, setStep }) => {
     const { isConnected, chain } = useAccount();
-    const [address, setAddress] = useState('');
-    const [feeOption, setFeeOption] = useState(`5% ${chain.nativeCurrency.symbol} raised only`);
-    const [currency, setCurrency] = useState(chain.nativeCurrency.symbol);
-    const [listingOption, setListingOption] = useState('Auto Listing');
+    const [tokenAddress, setTokenAddress] = useState(description.tokenAddress||'');
+    const [feeOption, setFeeOption] = useState(description.feeOption||`5% ${chain.nativeCurrency.symbol} raised only`);
+    const [currency, setCurrency] = useState(description.currency||chain.nativeCurrency.symbol);
+    const [listingOption, setListingOption] = useState(description.listingOption||'Auto Listing');
     const [name, setName] = useState(null);
     const [symbol, setSymbol] = useState(null);
     const [totalSupply, setTotalSupply] = useState(null);
@@ -66,13 +66,13 @@ const Step1 = ({ setStep, setDescription }) => {
     ];
 
     const verifyToken = async () => {
-        if (!address) return;
+        if (!tokenAddress) return;
 
         try {
             // console.log("first")
             const name = await readContract(wagmiconfig, {
                 abi,
-                address: address,
+                address: tokenAddress,
                 functionName: 'name',
             });
             // console.log({name})
@@ -80,7 +80,7 @@ const Step1 = ({ setStep, setDescription }) => {
 
             const symbol = await readContract(wagmiconfig, {
                 abi,
-                address: address,
+                address: tokenAddress,
                 functionName: 'symbol',
             });
             // console.log({symbol})
@@ -88,7 +88,7 @@ const Step1 = ({ setStep, setDescription }) => {
 
             const totalSupply = await readContract(wagmiconfig, {
                 abi,
-                address: address,
+                address: tokenAddress,
                 functionName: 'totalSupply',
             });
             // console.log({totalSupply})
@@ -106,24 +106,20 @@ const Step1 = ({ setStep, setDescription }) => {
 
     useEffect(() => {
         verifyToken();
-    }, [address]);
+    }, [tokenAddress,chain]);
 
     const handleNext = () => {
-        setStep((prevStep) => prevStep + 1);
         setDescription((prevDescription) => ({
             ...prevDescription,
-            address,
+            tokenAddress,
             feeOption,
             currency,
             listingOption,
             choosenChain:chain.nativeCurrency.name
         }));
+        setStep((prevStep) => prevStep + 1);
     };
 
-    const handleAddress = (e) => {
-        const newAddress = e.target.value;
-        setAddress(newAddress);
-    };
 
     return (
         <>
@@ -133,18 +129,18 @@ const Step1 = ({ setStep, setDescription }) => {
                 <Form.Control
                     type="text"
                     placeholder="Input token address"
-                    value={address}
-                    onChange={handleAddress}
-                />
-                <Form.Text className="mb-3 text-muted">Enter the token address and verify</Form.Text>
-                {error && <Form.Text className="text-danger">{error}</Form.Text>}
-                {name && symbol && totalSupply && (
-                    <Form.Text>
+                    value={tokenAddress}
+                    onChange={(e) => setTokenAddress(e.target.value)}
+                />{(name && symbol && totalSupply) ?(
+                    <Form.Text className="mb-3 text-muted">
                         Name: {name} <br />
                         Symbol: {symbol} <br />
                         Total Supply: {totalSupply.toString()}
                     </Form.Text>
-                )}
+                ):
+                (<><Form.Text className="mb-3 text-muted">Enter the token address and verify</Form.Text><br/></>)}
+                {error && <Form.Text className="text-danger">{error}</Form.Text>}
+                
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formCurrency">

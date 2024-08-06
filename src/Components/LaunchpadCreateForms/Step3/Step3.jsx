@@ -1,28 +1,54 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import { useAccount } from 'wagmi';
 
-const Step3 = ({ description, setDescription, handleNext, handlePrevious }) => {
-  const { isConnected, chain } = useAccount();
-  const [logoURL, setLogoURL] = useState('');
-  const [website, setWebsite] = useState('');
-  const [facebook, setFacebook] = useState('');
-  const [twitter, setTwitter] = useState('');
-  const [github, setGithub] = useState('');
-  const [telegram, setTelegram] = useState('');
-  const [instagram, setInstagram] = useState('');
-  const [discord, setDiscord] = useState('');
-  const [reddit, setReddit] = useState('');
-  const [youtube, setYoutube] = useState('');
-  const [whitelistLink, setWhitelistLink] = useState('');
-  if (!isConnected || chain.nativeCurrency.name !== description.choosenChain) {
+const Step3 = ({ description, setDescription, setStep  }) => {
+  // console.log({description})
+  const { isConnected, chain, address } = useAccount();
+  const [logoURL, setLogoURL] = useState(description.logoURL||'');
+  const [website, setWebsite] = useState(description.website||'');
+  const [facebook, setFacebook] = useState(description.facebook||'');
+  const [twitter, setTwitter] = useState(description.twitter||'');
+  const [github, setGithub] = useState(description.github||'');
+  const [telegram, setTelegram] = useState(description.telegram||'');
+  const [instagram, setInstagram] = useState(description.whitelist||'');
+  const [discord, setDiscord] = useState(description.discord||'');
+  const [reddit, setReddit] = useState(description.reddit||'');
+  const [youtube, setYoutube] = useState(description.youtube||'');
+  const [whitelistLink, setWhitelistLink] = useState(description.whitelistLink||'');
+  const [tokenDescription, setTokenDescription] = useState(description.tokenDescription||'');
+
+  const handlePrevious = () => {
+    setStep((prevStep) => prevStep - 1);
+  }
+
+  const handleNext = () => {
+    setDescription((prevDescription) => ({
+      ...prevDescription,
+      logoURL,
+      website,
+      facebook,
+      twitter,
+      github,
+      telegram,
+      instagram,
+      discord,
+      reddit,
+      youtube,
+      whitelistLink,
+      tokenDescription,
+    }));
+    setStep((prevStep) => prevStep + 1);
+  }
+
+  if (!isConnected || chain.nativeCurrency.name !== description.choosenChain || address !==description.choosenAccount) {
     return <div>
       <center className="text-danger">
         <div class="spinner-border text-danger" role="status">
-          <span class="sr-only">Loading...</span>
+          <span class="sr-only"></span>
         </div><br />
-        You chose {description.choosenChain} chain in Step 1. The verification of token was done for the same.<br />
-        Either switch to {description.choosenChain} or reload to start again!!!!
+        You chose {description.choosenChain} and {description.choosenAccount} chain in Step 1. The verification of token was done for the same.<br />
+        Either switch to {description.choosenChain} and {description.choosenAccount} or reload to start again!!!!
       </center>
     </div>;
   }
@@ -145,8 +171,8 @@ const Step3 = ({ description, setDescription, handleNext, handlePrevious }) => {
           as="textarea"
           rows={3}
           placeholder="Enter description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          value={tokenDescription}
+          onChange={(e) => setTokenDescription(e.target.value)}
         />
       </Form.Group>
 

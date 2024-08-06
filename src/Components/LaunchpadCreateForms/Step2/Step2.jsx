@@ -1,57 +1,120 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import { useAccount } from 'wagmi';
 
 
-const Step2 = ({ description, setStep }) => {
-  console.log({description})
-  const { isConnected, chain } = useAccount();
-  const [presaleRate, setPresaleRate] = useState(0);
-  const [whitelist, setWhitelist] = useState('Disable');
-  const [hardcap, setHardcap] = useState(0);
-  const [softcap, setSoftcap] = useState(0);
-  const [minBuy, setMinBuy] = useState(0);
-  const [maxBuy, setMaxBuy] = useState(0);
-  const [refundType, setRefundType] = useState('Refund');
-  const [startTime, setStartTime] = useState('');
-  const [endTime, setEndTime] = useState('');
+const Step2 = ({ description, setDescription, setStep }) => {
+  // console.log({description})
+  const { isConnected, chain, address } = useAccount();
+  const [presaleRate, setPresaleRate] = useState(description.presaleRate || 0);
+  const [whitelist, setWhitelist] = useState(description.whitelist || 'Disable');
+  const [hardcap, setHardcap] = useState(description.hardcap || 0);
+  const [softcap, setSoftcap] = useState(description.softcap || 0);
+  const [minBuy, setMinBuy] = useState(description.minBuy || 0);
+  const [maxBuy, setMaxBuy] = useState(description.maxBuy || 0);
+  const [refundType, setRefundType] = useState(description.refundType || 'Refund');
+  const [startTime, setStartTime] = useState(description.startTime || '');
+  const [endTime, setEndTime] = useState(description.endTime || '');
 
+  //Form features
+  const [minTime, setMinTime] = useState('');
+  const [maxTime, setMaxTime] = useState('');
+
+  useEffect(() => {
+    const now = new Date();
+    const oneHourFromNow = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+    const maxFutureTime = new Date(now.getTime() + 365 * 24 * 60 * 60 * 1000); // 1 year from now
+
+    setMinTime(oneHourFromNow.toISOString().slice(0, 16));
+    setMaxTime(maxFutureTime.toISOString().slice(0, 16));
+  }, []);
+
+  //errors
+  const [presaleRateError, setPresaleRateError] = useState(null)
+  const [hardcapError, setHardcapError] = useState(null)
+  const [softcapError, setSoftcapError] = useState(null)
+  const [minBuyError, setMinBuyError] = useState(null)
+  const [maxBuyError, setMaxBuyError] = useState(null)
+
+  const [endTimeError, setEndTimeError] = useState(null);
 
   const handlePresaleRate = (rate) => {
     if (rate <= 0) {
-
+      setPresaleRateError('Presale rate must be greater than 0');
+    } else {
+      setPresaleRateError(null);
     }
-    setPresaleRate(rate)
-  }
+    setPresaleRate(rate);
+  };
 
   const handleHardcap = (hcap) => {
-    setHardcap(hcap)
-  }
+    if (hcap <= 0) {
+      setHardcapError('Hardcap must be greater than 0');
+    } else {
+      setHardcapError(null);
+    }
+    setHardcap(hcap);
+  };
+
   const handleSoftcap = (scap) => {
-    setSoftcap(scap)
-  }
+    if (scap <= 0) {
+      setSoftcapError('Softcap must be greater than 0');
+    } else {
+      setSoftcapError(null);
+    }
+    setSoftcap(scap);
+  };
+
   const handleMinBuy = (mibuy) => {
-    setMinBuy(mibuy)
-  }
+    if (mibuy <= 0) {
+      setMinBuyError('Minimum buy must be greater than 0');
+    } else {
+      setMinBuyError(null);
+    }
+    setMinBuy(mibuy);
+  };
+
   const handleMaxBuy = (mabuy) => {
-    setMaxBuy(mabuy)
-  }
+    if (mabuy <= 0) {
+      setMaxBuyError('Maximum buy must be greater than 0');
+    } else {
+      setMaxBuyError(null);
+    }
+    setMaxBuy(mabuy);
+  };
+
   const handleRefundType = (rt) => {
     setRefundType(rt)
   }
   const handleStartTime = (st) => {
-    setStartTime(st)
+    setStartTime(st);
+  };
 
-  }
   const handleEndTime = (et) => {
-    setEndTime(et)
-  }
+    if (new Date(et) <= new Date(startTime)) {
+      setEndTimeError('End time must be later than start time');
+    } else {
+      setEndTimeError(null);
+    }
+    setEndTime(et);
+  };
 
   const handlePrevious = () => {
     setStep((prevStep) => prevStep - 1);
   }
 
   const handleNext = () => {
+    setDescription((prevDescription) => ({
+      ...prevDescription,
+      presaleRate,
+      whitelist,
+      hardcap,
+      softcap,
+      minBuy,
+      maxBuy,
+      refundType,
+      choosenAccount: address
+    }));
     setStep((prevStep) => prevStep + 1);
   }
 
@@ -168,6 +231,8 @@ const Step2 = ({ description, setStep }) => {
         <Form.Control
           type="datetime-local"
           value={startTime}
+          min={minTime}
+          max={maxTime}
           onChange={(e) => handleStartTime(e.target.value)}
         />
       </Form.Group>
@@ -177,6 +242,7 @@ const Step2 = ({ description, setStep }) => {
         <Form.Control
           type="datetime-local"
           value={endTime}
+          min={startTime}
           onChange={(e) => handleEndTime(e.target.value)}
         />
       </Form.Group>
@@ -188,7 +254,18 @@ const Step2 = ({ description, setStep }) => {
       <Button variant="secondary" onClick={handlePrevious} className="me-2">
         Previous
       </Button>
-      <Button variant="primary" onClick={handleNext} disabled={true}>
+      <Button
+        variant="primary"
+        onClick={handleNext}
+        disabled={(
+          presaleRateError ||
+          hardcapError ||
+          softcapError ||
+          minBuyError ||
+          maxBuyError ||
+          endTimeError
+        )}
+      >
         Next
       </Button>
     </>

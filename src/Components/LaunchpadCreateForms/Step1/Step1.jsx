@@ -8,10 +8,10 @@ import { wagmiconfig } from '../../../wagmiconfig/wagmiconfig';
 
 const Step1 = ({ description, setDescription, setStep }) => {
     const { isConnected, chain } = useAccount();
-    const [tokenAddress, setTokenAddress] = useState(description.tokenAddress||'');
-    const [feeOption, setFeeOption] = useState(description.feeOption||`5% ${chain.nativeCurrency.symbol} raised only`);
-    const [currency, setCurrency] = useState(description.currency||chain.nativeCurrency.symbol);
-    const [listingOption, setListingOption] = useState(description.listingOption||'Auto Listing');
+    const [tokenAddress, setTokenAddress] = useState(description.tokenAddress || '');
+    const [feeOption, setFeeOption] = useState(description.feeOption || `5% ${chain.nativeCurrency.symbol} raised only`);
+    const [currency, setCurrency] = useState(description.currency || chain.nativeCurrency.symbol);
+    const [listingOption, setListingOption] = useState(description.listingOption || 'Auto Listing');
     const [name, setName] = useState(null);
     const [symbol, setSymbol] = useState(null);
     const [totalSupply, setTotalSupply] = useState(null);
@@ -106,16 +106,17 @@ const Step1 = ({ description, setDescription, setStep }) => {
 
     useEffect(() => {
         verifyToken();
-    }, [tokenAddress,chain]);
+    }, [tokenAddress, chain]);
 
     const handleNext = () => {
         setDescription((prevDescription) => ({
             ...prevDescription,
             tokenAddress,
+            tokenName:name,
             feeOption,
             currency,
             listingOption,
-            choosenChain:chain.nativeCurrency.name
+            choosenChain: chain.nativeCurrency.name
         }));
         setStep((prevStep) => prevStep + 1);
     };
@@ -125,22 +126,28 @@ const Step1 = ({ description, setDescription, setStep }) => {
         <>
             <Form.Group className="mb-3" controlId="formTokenAddress">
                 <Form.Label>Token Address*</Form.Label>
-                
+
                 <Form.Control
                     type="text"
                     placeholder="Input token address"
                     value={tokenAddress}
                     onChange={(e) => setTokenAddress(e.target.value)}
-                />{(name && symbol && totalSupply) ?(
+                />{(name && symbol && totalSupply) ? (
                     <Form.Text className="mb-3 text-muted">
                         Name: {name} <br />
                         Symbol: {symbol} <br />
                         Total Supply: {totalSupply.toString()}
                     </Form.Text>
-                ):
-                (<><Form.Text className="mb-3 text-muted">Enter the token address and verify</Form.Text><br/></>)}
+                ) : (
+                    <>
+                        <Form.Text className="mb-3 text-muted">
+                            Enter the token address and verify
+                        </Form.Text>
+                        <br />
+                    </>
+                )}
                 {error && <Form.Text className="text-danger">{error}</Form.Text>}
-                
+
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formCurrency">

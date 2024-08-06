@@ -1,7 +1,31 @@
 import React from 'react';
 import { Form, Button } from 'react-bootstrap';
+import { useAccount } from 'wagmi';
 
-const Step3 = ({ logoURL, setLogoURL, website, setWebsite, facebook, setFacebook, twitter, setTwitter, github, setGithub, telegram, setTelegram, instagram, setInstagram, discord, setDiscord, reddit, setReddit, youtube, setYoutube, whitelistLink, setWhitelistLink, description, setDescription, handleNext, handlePrevious }) => {
+const Step3 = ({ description, setDescription, handleNext, handlePrevious }) => {
+  const { isConnected, chain } = useAccount();
+  const [logoURL, setLogoURL] = useState('');
+  const [website, setWebsite] = useState('');
+  const [facebook, setFacebook] = useState('');
+  const [twitter, setTwitter] = useState('');
+  const [github, setGithub] = useState('');
+  const [telegram, setTelegram] = useState('');
+  const [instagram, setInstagram] = useState('');
+  const [discord, setDiscord] = useState('');
+  const [reddit, setReddit] = useState('');
+  const [youtube, setYoutube] = useState('');
+  const [whitelistLink, setWhitelistLink] = useState('');
+  if (!isConnected || chain.nativeCurrency.name !== description.choosenChain) {
+    return <div>
+      <center className="text-danger">
+        <div class="spinner-border text-danger" role="status">
+          <span class="sr-only">Loading...</span>
+        </div><br />
+        You chose {description.choosenChain} chain in Step 1. The verification of token was done for the same.<br />
+        Either switch to {description.choosenChain} or reload to start again!!!!
+      </center>
+    </div>;
+  }
   return (
     <>
       <Form.Group className="mb-3" controlId="formLogoURL">
@@ -130,7 +154,7 @@ const Step3 = ({ logoURL, setLogoURL, website, setWebsite, facebook, setFacebook
         Previous
       </Button>
       <Button variant="primary" onClick={handleNext}>
-        Submit
+        Next
       </Button>
     </>
   )

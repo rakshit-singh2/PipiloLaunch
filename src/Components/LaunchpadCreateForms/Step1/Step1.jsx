@@ -1,22 +1,149 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, Button, Dropdown, DropdownButton } from 'react-bootstrap';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { FaEthereum } from 'react-icons/fa';
 import { useAccount } from 'wagmi';
+import { readContract } from '@wagmi/core';
+import { wagmiconfig } from '../../../wagmiconfig/wagmiconfig';
 
-const Step1 = ({ tokenAddress, setTokenAddress, currency, setCurrency, feeOption, setFeeOption, listingOption, setListingOption, handleNext, error }) => {
-    const { isConnected } = useAccount();
+const Step1 = ({ setStep, setDescription }) => {
+    const { isConnected, chain } = useAccount();
+    const [address, setAddress] = useState('');
+    const [feeOption, setFeeOption] = useState('5% ETH raised only');
+    const [currency, setCurrency] = useState('ETH');
+    const [listingOption, setListingOption] = useState('Auto Listing');
+    const [name, setName] = useState(null);
+    const [symbol, setSymbol] = useState(null);
+    const [totalSupply, setTotalSupply] = useState(null);
+    const [error, setError] = useState('');
+
+    const abi = [
+        {
+            "constant": true,
+            "inputs": [],
+            "name": "name",
+            "outputs": [{ "name": "", "type": "string" }],
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "constant": true,
+            "inputs": [],
+            "name": "symbol",
+            "outputs": [{ "name": "", "type": "string" }],
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "constant": true,
+            "inputs": [],
+            "name": "totalSupply",
+            "outputs": [{ "name": "", "type": "uint256" }],
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "constant": true,
+            "inputs": [{ "name": "account", "type": "address" }],
+            "name": "balanceOf",
+            "outputs": [{ "name": "", "type": "uint256" }],
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "constant": true,
+            "inputs": [],
+            "name": "decimals",
+            "outputs": [{ "name": "", "type": "uint8" }],
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
+        }
+    ];
+
+    const verifyToken = async () => {
+        if (!address) return;
+
+        try {
+            // console.log("first")
+            const name = await readContract(wagmiconfig, {
+                abi,
+                address: address,
+                functionName: 'name',
+            });
+            // console.log({name})
+            setName(name);
+
+            const symbol = await readContract(wagmiconfig, {
+                abi,
+                address: address,
+                functionName: 'symbol',
+            });
+            // console.log({symbol})
+            setSymbol(symbol);
+
+            const totalSupply = await readContract(wagmiconfig, {
+                abi,
+                address: address,
+                functionName: 'totalSupply',
+            });
+            // console.log({totalSupply})
+            setTotalSupply(totalSupply);
+
+            setError('');
+        } catch (err) {
+            setName(null);
+            setSymbol(null);
+            setTotalSupply(null);
+            setError('Invalid token address or data');
+            console.error(err);
+        }
+    };
+
+    useEffect(() => {
+        verifyToken();
+    }, [address]);
+
+    const handleNext = () => {
+        setStep((prevStep) => prevStep + 1);
+        setDescription((prevDescription) => ({
+            ...prevDescription,
+            address,
+            feeOption,
+            currency,
+            listingOption,
+            choosenChain:chain.nativeCurrency.name
+        }));
+    };
+
+    const handleAddress = (e) => {
+        const newAddress = e.target.value;
+        setAddress(newAddress);
+    };
+
     return (
         <>
             <Form.Group className="mb-3" controlId="formTokenAddress">
                 <Form.Label>Token Address*</Form.Label>
+                <Form.Text className="mb-3 text-muted">Enter the token address and verify</Form.Text>
                 <Form.Control
                     type="text"
                     placeholder="Input token address"
-                    value={tokenAddress}
-                    onChange={(e) => setTokenAddress(e.target.value)}
+                    value={address}
+                    onChange={handleAddress}
                 />
-                <Form.Text className="text-danger">{error && 'Token address cannot be blank'}</Form.Text>
+                {error && <Form.Text className="text-danger">{error}</Form.Text>}
+                {name && symbol && totalSupply && (
+                    <Form.Text>
+                        Name: {name} <br />
+                        Symbol: {symbol} <br />
+                        Total Supply: {totalSupply.toString()}
+                    </Form.Text>
+                )}
             </Form.Group>
 
             <Form.Group className="mb-3" controlId="formCurrency">
@@ -73,14 +200,14 @@ const Step1 = ({ tokenAddress, setTokenAddress, currency, setCurrency, feeOption
             </Form.Group>
 
             {isConnected ? (
-                <Button variant="primary" onClick={handleNext} disabled={!error == ''}>
+                <Button variant="primary" onClick={handleNext} disabled={!(name && symbol && totalSupply)}>
                     Next
                 </Button>
             ) : (
                 <ConnectButton />
             )}
         </>
-    )
+    );
 };
 
 export default Step1;

@@ -53,12 +53,12 @@ function myFunction() {
 					
 					
 					
-                    <DropdownButton class="dropdown" id="dropdown-basic-button" title={<><FaRocket className="text-xl" /> Launchpads</>}>
+                    <DropdownButton className="dropdown" id="dropdown-basic-button" title={<><FaRocket className="text-xl" /> Launchpads</>}>
                         <Dropdown.Item href="/launchpads/launchpad">Create a launchpad</Dropdown.Item>
                         <Dropdown.Item href="/launchpads/fairlaunch">Create a fairlaunch</Dropdown.Item>
                         <Dropdown.Item href="/launchpads/launchpad-list">Launchpads List</Dropdown.Item>
                     </DropdownButton>
-                    <DropdownButton class="dropbtn" id="dropdown-basic-button" title={
+                    <DropdownButton className="dropbtn" id="dropdown-basic-button" title={
                         <>
                             <IoMdLock className="text-xl" /> Lock
                         </>
@@ -66,7 +66,7 @@ function myFunction() {
                         <Dropdown.Item href="/lock/create">Create a Lock</Dropdown.Item>
                         <Dropdown.Item href="/lock/lock-list">Lock List</Dropdown.Item>
                     </DropdownButton>
-                    <DropdownButton class="dropbtn" id="dropdown-basic-button" title={
+                    <DropdownButton className="dropbtn" id="dropdown-basic-button" title={
                         <>
                             <FaRegDotCircle className="text-xl" /> Token
                         </>

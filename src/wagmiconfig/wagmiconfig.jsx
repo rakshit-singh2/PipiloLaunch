@@ -9,7 +9,12 @@ export const wagmiconfig = getDefaultConfig({
     projectId,
     chains: [mainnet, sepolia, optimism, base, bsc, arbitrum],
     transports: { 
+        [mainnet.id]: http("https://ethereum-rpc.publicnode.com"), 
         [sepolia.id]: http("https://ethereum-sepolia-rpc.publicnode.com"), 
+        [optimism.id]: http("https://optimism-rpc.publicnode.com"), 
+        [base.id]: http("https://base-rpc.publicnode.com"), 
+        [bsc.id]: http("https://bsc-pokt.nodies.app"), 
+        [arbitrum.id]: http("https://arbitrum.drpc.org"), 
     },
     
 });

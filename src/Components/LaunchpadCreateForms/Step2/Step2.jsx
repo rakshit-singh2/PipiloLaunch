@@ -4,6 +4,7 @@ import { useAccount } from 'wagmi';
 
 
 const Step2 = ({ description, setStep }) => {
+  console.log({description})
   const { isConnected, chain } = useAccount();
   const [presaleRate, setPresaleRate] = useState(0);
   const [whitelist, setWhitelist] = useState('Disable');
@@ -58,7 +59,7 @@ const Step2 = ({ description, setStep }) => {
     return <div>
       <center className="text-danger">
         <div class="spinner-border text-danger" role="status">
-          <span class="sr-only">Loading...</span>
+          <span class="sr-only"></span>
         </div><br />
         You chose {description.choosenChain} chain in Step 1. The verification of token was done for the same.<br />
         Either switch to {description.choosenChain} or reload to start again!!!!

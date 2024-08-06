@@ -10,7 +10,7 @@ const LaunchpadCreate = () => {
 
   const [step, setStep] = useState(1);
   const [description, setDescription] = useState({});
-
+  console.log({description})
   const handleSubmit = () => { setStep(1) };
 
   return (

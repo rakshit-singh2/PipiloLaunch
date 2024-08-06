@@ -9,8 +9,8 @@ import { wagmiconfig } from '../../../wagmiconfig/wagmiconfig';
 const Step1 = ({ setStep, setDescription }) => {
     const { isConnected, chain } = useAccount();
     const [address, setAddress] = useState('');
-    const [feeOption, setFeeOption] = useState('5% ETH raised only');
-    const [currency, setCurrency] = useState('ETH');
+    const [feeOption, setFeeOption] = useState(`5% ${chain.nativeCurrency.symbol} raised only`);
+    const [currency, setCurrency] = useState(chain.nativeCurrency.symbol);
     const [listingOption, setListingOption] = useState('Auto Listing');
     const [name, setName] = useState(null);
     const [symbol, setSymbol] = useState(null);
@@ -129,13 +129,14 @@ const Step1 = ({ setStep, setDescription }) => {
         <>
             <Form.Group className="mb-3" controlId="formTokenAddress">
                 <Form.Label>Token Address*</Form.Label>
-                <Form.Text className="mb-3 text-muted">Enter the token address and verify</Form.Text>
+                
                 <Form.Control
                     type="text"
                     placeholder="Input token address"
                     value={address}
                     onChange={handleAddress}
                 />
+                <Form.Text className="mb-3 text-muted">Enter the token address and verify</Form.Text>
                 {error && <Form.Text className="text-danger">{error}</Form.Text>}
                 {name && symbol && totalSupply && (
                     <Form.Text>
@@ -150,11 +151,11 @@ const Step1 = ({ setStep, setDescription }) => {
                 <Form.Label>Currency</Form.Label>
                 <DropdownButton id="dropdown-currency" title={
                     <>
-                        <FaEthereum style={{ marginRight: '5px' }} /> {currency}
+                        <FaEthereum style={{ marginRight: '5px' }} /> {chain.nativeCurrency.symbol}
                     </>
                 }>
-                    <Dropdown.Item onClick={() => setCurrency('ETH')}>
-                        <FaEthereum style={{ marginRight: '5px' }} /> ETH
+                    <Dropdown.Item onClick={() => setCurrency(chain.nativeCurrency.symbol)}>
+                        <FaEthereum style={{ marginRight: '5px' }} /> {chain.nativeCurrency.symbol}
                     </Dropdown.Item>
                 </DropdownButton>
                 <Form.Text>Users will pay with {currency} for your token</Form.Text>
@@ -165,16 +166,16 @@ const Step1 = ({ setStep, setDescription }) => {
                 <Form.Check
                     type="radio"
                     id="feeOption1"
-                    label="5% ETH raised only"
-                    checked={feeOption === '5% ETH raised only'}
-                    onChange={() => setFeeOption('5% ETH raised only')}
+                    label={`5% ${chain.nativeCurrency.symbol} raised only`}
+                    checked={feeOption === `5% ${chain.nativeCurrency.symbol} raised only`}
+                    onChange={() => setFeeOption(`5% ${chain.nativeCurrency.symbol} raised only`)}
                 />
                 <Form.Check
                     type="radio"
                     id="feeOption2"
-                    label="2% ETH raised + 2% token sold"
-                    checked={feeOption === '2% ETH raised + 2% token sold'}
-                    onChange={() => setFeeOption('2% ETH raised + 2% token sold')}
+                    label={`2% ${chain.nativeCurrency.symbol} raised + 2% token sold`}
+                    checked={feeOption === `2% ${chain.nativeCurrency.symbol} raised + 2% token sold`}
+                    onChange={() => setFeeOption(`2% ${chain.nativeCurrency.symbol} raised + 2% token sold`)}
                 />
             </Form.Group>
 

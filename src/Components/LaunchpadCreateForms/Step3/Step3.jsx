@@ -11,7 +11,7 @@ const Step3 = ({ description, setDescription, setStep  }) => {
   const [twitter, setTwitter] = useState(description.twitter||'');
   const [github, setGithub] = useState(description.github||'');
   const [telegram, setTelegram] = useState(description.telegram||'');
-  const [instagram, setInstagram] = useState(description.whitelist||'');
+  const [instagram, setInstagram] = useState(description.instagram||'');
   const [discord, setDiscord] = useState(description.discord||'');
   const [reddit, setReddit] = useState(description.reddit||'');
   const [youtube, setYoutube] = useState(description.youtube||'');
@@ -41,7 +41,7 @@ const Step3 = ({ description, setDescription, setStep  }) => {
     setStep((prevStep) => prevStep + 1);
   }
 
-  if (!isConnected || chain.nativeCurrency.name !== description.choosenChain || address !==description.choosenAccount) {
+  if (!isConnected || chain?.nativeCurrency.name !== description.choosenChain || address !==description.choosenAccount) {
     return <div>
       <center className="text-danger">
         <div class="spinner-border text-danger" role="status">

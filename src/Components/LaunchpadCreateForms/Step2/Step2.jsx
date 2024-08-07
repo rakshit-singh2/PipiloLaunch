@@ -149,7 +149,7 @@ const Step2 = ({ description, setDescription, setStep }) => {
     setStep((prevStep) => prevStep + 1);
   }
 
-  if (!isConnected || chain.nativeCurrency.name !== description.choosenChain) {
+  if (!isConnected || chain?.nativeCurrency.name !== description.choosenChain) {
     return <div>
       <center className="text-danger">
         <div class="spinner-border text-danger" role="status">
@@ -174,7 +174,7 @@ const Step2 = ({ description, setDescription, setStep }) => {
         />
       </Form.Group>
       <Form.Text>
-        If I spend 1 {chain.nativeCurrency.symbol}, how many tokens will I receive?
+        If I spend 1 {chain?.nativeCurrency?.symbol ? chain.nativeCurrency.symbol : 'crypto'}, how many tokens will I receive?
       </Form.Text><br/>
       {presaleRateError && <Form.Text className="text-danger">{presaleRateError}</Form.Text>}
 
@@ -197,7 +197,7 @@ const Step2 = ({ description, setDescription, setStep }) => {
       </Form.Group>
 
       <Form.Group className="mb-3" controlId="formSoftcap">
-        <Form.Label>Softcap ({chain.nativeCurrency.symbol})*</Form.Label>
+        <Form.Label>Softcap ({chain?.nativeCurrency?.symbol ? chain.nativeCurrency.symbol : 'crypto'})*</Form.Label>
         <Form.Control
           type="number"
           placeholder="Enter softcap"
@@ -209,7 +209,7 @@ const Step2 = ({ description, setDescription, setStep }) => {
       {softcapError && <Form.Text className="text-danger">{softcapError}</Form.Text>}
 
       <Form.Group className="mb-3" controlId="formHardcap">
-        <Form.Label>Hardcap ({chain.nativeCurrency.symbol})*</Form.Label>
+        <Form.Label>Hardcap ({chain?.nativeCurrency?.symbol ? chain.nativeCurrency.symbol : 'crypto'})*</Form.Label>
         <Form.Control
           type="number"
           placeholder="Enter hardcap"
@@ -221,7 +221,7 @@ const Step2 = ({ description, setDescription, setStep }) => {
       {hardcapError && <Form.Text className="text-danger">{hardcapError}</Form.Text>}
 
       <Form.Group className="mb-3" controlId="formMinBuy">
-        <Form.Label>Minimum buy ({chain.nativeCurrency.symbol})*</Form.Label>
+        <Form.Label>Minimum buy ({chain?.nativeCurrency?.symbol ? chain.nativeCurrency.symbol : 'crypto'})*</Form.Label>
         <Form.Control
           type="number"
           placeholder="Enter minimum buy"
@@ -233,7 +233,7 @@ const Step2 = ({ description, setDescription, setStep }) => {
       {minBuyError && <Form.Text className="text-danger">{minBuyError}</Form.Text>}
 
       <Form.Group className="mb-3" controlId="formMaxBuy">
-        <Form.Label>Maximum buy ({chain.nativeCurrency.symbol})*</Form.Label>
+        <Form.Label>Maximum buy ({chain?.nativeCurrency?.symbol ? chain.nativeCurrency.symbol : 'crypto'})*</Form.Label>
         <Form.Control
           type="number"
           placeholder="Enter maximum buy"
@@ -273,7 +273,7 @@ const Step2 = ({ description, setDescription, setStep }) => {
         />
       </Form.Group>
       <Form.Text className="text-muted">
-        1 {chain.nativeCurrency.symbol} = {listingRate} {description.tokenName}
+        1 {chain?.nativeCurrency?.symbol ? chain.nativeCurrency.symbol : 'crypto'} = {listingRate} {description.tokenName}
       </Form.Text><br />
       {listingRateError && <Form.Text className="text-danger">{listingRateError}</Form.Text>}
 

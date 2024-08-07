@@ -9,8 +9,8 @@ import { wagmiconfig } from '../../../wagmiconfig/wagmiconfig';
 const Step1 = ({ description, setDescription, setStep }) => {
     const { isConnected, chain } = useAccount();
     const [tokenAddress, setTokenAddress] = useState(description.tokenAddress || '');
-    const [feeOption, setFeeOption] = useState(description.feeOption || `5% ${chain.nativeCurrency.symbol} raised only`);
-    const [currency, setCurrency] = useState(description.currency || chain.nativeCurrency.symbol);
+    const [feeOption, setFeeOption] = useState(description.feeOption || `5% ${chain?.nativeCurrency?.symbol ? chain.nativeCurrency.symbol : 'crypto'} raised only`);
+    const [currency, setCurrency] = useState(description.currency || chain?.nativeCurrency?.symbol ? chain.nativeCurrency.symbol : 'crypto');
     const [listingOption, setListingOption] = useState(description.listingOption || 'Auto Listing');
     const [name, setName] = useState(null);
     const [symbol, setSymbol] = useState(null);
@@ -116,7 +116,7 @@ const Step1 = ({ description, setDescription, setStep }) => {
             feeOption,
             currency,
             listingOption,
-            choosenChain: chain.nativeCurrency.name
+            choosenChain: chain?.nativeCurrency.name
         }));
         setStep((prevStep) => prevStep + 1);
     };
@@ -154,11 +154,11 @@ const Step1 = ({ description, setDescription, setStep }) => {
                 <Form.Label>Currency</Form.Label>
                 <DropdownButton id="dropdown-currency" title={
                     <>
-                        <FaEthereum style={{ marginRight: '5px' }} /> {chain.nativeCurrency.symbol}
+                        <FaEthereum style={{ marginRight: '5px' }} /> {chain?.nativeCurrency?.symbol ? chain.nativeCurrency.symbol : 'crypto'}
                     </>
                 }>
-                    <Dropdown.Item onClick={() => setCurrency(chain.nativeCurrency.symbol)}>
-                        <FaEthereum style={{ marginRight: '5px' }} /> {chain.nativeCurrency.symbol}
+                    <Dropdown.Item onClick={() => setCurrency(chain?.nativeCurrency?.symbol ? chain.nativeCurrency.symbol : 'crypto')}>
+                        <FaEthereum style={{ marginRight: '5px' }} /> {chain?.nativeCurrency?.symbol ? chain.nativeCurrency.symbol : 'crypto'}
                     </Dropdown.Item>
                 </DropdownButton>
                 <Form.Text>Users will pay with {currency} for your token</Form.Text>
@@ -169,16 +169,16 @@ const Step1 = ({ description, setDescription, setStep }) => {
                 <Form.Check
                     type="radio"
                     id="feeOption1"
-                    label={`5% ${chain.nativeCurrency.symbol} raised only`}
-                    checked={feeOption === `5% ${chain.nativeCurrency.symbol} raised only`}
-                    onChange={() => setFeeOption(`5% ${chain.nativeCurrency.symbol} raised only`)}
+                    label={`5% ${chain?.nativeCurrency?.symbol ? chain.nativeCurrency.symbol : 'crypto'} raised only`}
+                    checked={feeOption === `5% ${chain?.nativeCurrency?.symbol ? chain.nativeCurrency.symbol : 'crypto'} raised only`}
+                    onChange={() => setFeeOption(`5% ${chain?.nativeCurrency?.symbol ? chain.nativeCurrency.symbol : 'crypto'} raised only`)}
                 />
                 <Form.Check
                     type="radio"
                     id="feeOption2"
-                    label={`2% ${chain.nativeCurrency.symbol} raised + 2% token sold`}
-                    checked={feeOption === `2% ${chain.nativeCurrency.symbol} raised + 2% token sold`}
-                    onChange={() => setFeeOption(`2% ${chain.nativeCurrency.symbol} raised + 2% token sold`)}
+                    label={`2% ${chain?.nativeCurrency?.symbol ? chain.nativeCurrency.symbol : 'crypto'} raised + 2% token sold`}
+                    checked={feeOption === `2% ${chain?.nativeCurrency?.symbol ? chain.nativeCurrency.symbol : 'crypto'} raised + 2% token sold`}
+                    onChange={() => setFeeOption(`2% ${chain?.nativeCurrency?.symbol ? chain.nativeCurrency.symbol : 'crypto'} raised + 2% token sold`)}
                 />
             </Form.Group>
 

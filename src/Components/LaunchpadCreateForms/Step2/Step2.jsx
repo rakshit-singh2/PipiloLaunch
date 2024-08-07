@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import { useAccount } from 'wagmi';
+import Input from '../../Input/Input';
 
 
 const Step2 = ({ description, setDescription, setStep }) => {
@@ -54,14 +55,14 @@ const Step2 = ({ description, setDescription, setStep }) => {
       listingRateError ||
       endTimeError
   })
-  console.log({presaleRateError})
-  console.log({hardcapError})
-  console.log({softcapError})
-  console.log({minBuyError})
-  console.log({maxBuyError})
-  console.log({liquidityError})
-  console.log({listingRateError})
-  console.log({endTimeError})
+  console.log({ presaleRateError })
+  console.log({ hardcapError })
+  console.log({ softcapError })
+  console.log({ minBuyError })
+  console.log({ maxBuyError })
+  console.log({ liquidityError })
+  console.log({ listingRateError })
+  console.log({ endTimeError })
 
 
 
@@ -203,20 +204,16 @@ const Step2 = ({ description, setDescription, setStep }) => {
 
   return (
     <>
-      <Form.Group className="mb-3" controlId="formPresaleRate">
-        <Form.Label>Presale Rate*</Form.Label>
-        <Form.Control
-          type="number"
-          placeholder="Enter presale rate"
-          min={0}
-          value={presaleRate}
-          onChange={(e) => handlePresaleRate(e.target.value)}
-        />
-      </Form.Group>
-      <Form.Text>
-        If I spend 1 {chain?.nativeCurrency?.symbol ? chain.nativeCurrency.symbol : 'crypto'}, how many tokens will I receive?
-      </Form.Text><br />
-      {presaleRateError != 'null' && <Form.Text className="text-danger">{presaleRateError}</Form.Text>}
+      <Input
+        label={"Presale Rate*"}
+        type={"number"}
+        placeholder={"Enter presale rate"}
+        min={0}
+        value={presaleRate}
+        onChange={(e) => handlePresaleRate(e.target.value)}
+        note={`If I spend 1 ${chain?.nativeCurrency?.symbol ? chain.nativeCurrency.symbol : 'crypto'}, how many tokens will I receive?`}
+        error={presaleRateError != 'null' && <Form.Text className="text-danger">{presaleRateError}</Form.Text>}
+      />
 
       <Form.Group className="mb-3" controlId="formWhitelist">
         <Form.Label>Whitelist</Form.Label>
@@ -236,53 +233,47 @@ const Step2 = ({ description, setDescription, setStep }) => {
         />
       </Form.Group>
 
-      <Form.Group className="mb-3" controlId="formSoftcap">
-        <Form.Label>Softcap ({chain?.nativeCurrency?.symbol ? chain.nativeCurrency.symbol : 'crypto'})*</Form.Label>
-        <Form.Control
-          type="number"
-          placeholder="Enter softcap"
-          min={0}
-          value={softcap}
-          onChange={(e) => handleSoftcap(e.target.value)}
-        />
-      </Form.Group>
-      {softcapError != 'null' && <Form.Text className="text-danger">{softcapError}</Form.Text>}
+      <Input
+        label={`Softcap (${chain?.nativeCurrency?.symbol ? chain.nativeCurrency.symbol : 'crypto'})*`}
+        type={"number"}
+        placeholder={"Enter softcap"}
+        min={0}
+        value={softcap}
+        onChange={(e) => handleSoftcap(e.target.value)}
+        note={"Softcap must be >= 25% of Hardcap!"}
+        error={softcapError != 'null' && <Form.Text className="text-danger">{softcapError}</Form.Text>}
+      />
 
-      <Form.Group className="mb-3" controlId="formHardcap">
-        <Form.Label>Hardcap ({chain?.nativeCurrency?.symbol ? chain.nativeCurrency.symbol : 'crypto'})*</Form.Label>
-        <Form.Control
-          type="number"
-          placeholder="Enter hardcap"
-          min={0}
-          value={hardcap}
-          onChange={(e) => handleHardcap(e.target.value)}
-        />
-      </Form.Group>
-      {hardcapError != 'null' && <Form.Text className="text-danger">{hardcapError}</Form.Text>}
+      <Input
+        label={`Hardcap (${chain?.nativeCurrency?.symbol ? chain.nativeCurrency.symbol : 'crypto'})*`}
+        type={"number"}
+        placeholder={"Enter hardcap"}
+        min={0}
+        value={hardcap}
+        onChange={(e) => handleHardcap(e.target.value)}
 
-      <Form.Group className="mb-3" controlId="formMinBuy">
-        <Form.Label>Minimum buy ({chain?.nativeCurrency?.symbol ? chain.nativeCurrency.symbol : 'crypto'})*</Form.Label>
-        <Form.Control
-          type="number"
-          placeholder="Enter minimum buy"
-          min={0}
-          value={minBuy}
-          onChange={(e) => handleMinBuy(e.target.value)}
-        />
-      </Form.Group>
-      {minBuyError != 'null' && <Form.Text className="text-danger">{minBuyError}</Form.Text>}
+        error={hardcapError != 'null' && <Form.Text className="text-danger">{hardcapError}</Form.Text>}
+      />
 
-      <Form.Group className="mb-3" controlId="formMaxBuy">
-        <Form.Label>Maximum buy ({chain?.nativeCurrency?.symbol ? chain.nativeCurrency.symbol : 'crypto'})*</Form.Label>
-        <Form.Control
-          type="number"
-          placeholder="Enter maximum buy"
-          min={0}
-          value={maxBuy}
-          onChange={(e) => handleMaxBuy(e.target.value)}
-        />
-      </Form.Group>
-      {maxBuyError != 'null' && <Form.Text className="text-danger">{maxBuyError}</Form.Text>}
+      <Input
+        label={`Minimum buy (${chain?.nativeCurrency?.symbol ? chain.nativeCurrency.symbol : 'crypto'})*`}
+        type={"number"}
+        placeholder={"Enter minimum buy"}
+        min={0}
+        value={minBuy}
+        onChange={(e) => handleMinBuy(e.target.value)}
+        error={minBuyError != 'null' && <Form.Text className="text-danger">{minBuyError}</Form.Text>}
+      />
+
+      <Input
+        label={`Maximum buy (${chain?.nativeCurrency?.symbol ? chain.nativeCurrency.symbol : 'crypto'})*`}
+        type={"number"}
+        placeholder={"Enter maximum buy"}
+        min={0}
+        value={maxBuy}
+        onChange={(e) => handleMaxBuy(e.target.value)}
+        error={maxBuyError != 'null' && <Form.Text className="text-danger">{maxBuyError}</Form.Text>}
+      />
 
       <Form.Group className="mb-3" controlId="formRefundType">
         <Form.Label>Refund Type</Form.Label>
@@ -302,32 +293,26 @@ const Step2 = ({ description, setDescription, setStep }) => {
         />
       </Form.Group>
 
-      <Form.Group className="mb-3" controlId="formMaxBuy">
-        <Form.Label>Listing rate*</Form.Label>
-        <Form.Control
-          type="number"
-          placeholder="Listing rate"
-          min={0}
-          value={listingRate}
-          onChange={(e) => handleListingRate(e.target.value)}
-        />
-      </Form.Group>
-      <Form.Text className="text-muted">
-        1 {chain?.nativeCurrency?.symbol ? chain.nativeCurrency.symbol : 'crypto'} = {listingRate} {description.tokenName}
-      </Form.Text><br />
-      {listingRateError != 'null'  && <Form.Text className="text-danger">{listingRateError}</Form.Text>}
+      <Input
+        label={`Listing rate*`}
+        type={"number"}
+        placeholder={"Listing rate"}
+        min={0}
+        value={listingRate}
+        onChange={(e) => handleListingRate(e.target.value)}
+        note={`1 ${chain?.nativeCurrency?.symbol ? chain.nativeCurrency.symbol : 'crypto'} = ${listingRate ? listingRate : 0} ${description.tokenName}`}
+        error={listingRateError != 'null' && <Form.Text className="text-danger">{listingRateError}</Form.Text>}
+      />
 
-      <Form.Group className="mb-3" controlId="formMaxBuy">
-        <Form.Label>Liquidity (%)*</Form.Label>
-        <Form.Control
-          type="number"
-          placeholder="Enter maximum buy"
-          min={0}
-          value={liquidity}
-          onChange={(e) => handleLiquidity(e.target.value)}
-        />
-      </Form.Group>
-      {liquidityError != 'null' && <Form.Text className="text-danger">{liquidityError}</Form.Text>}
+      <Input
+        label={`Liquidity (%)*`}
+        type={"number"}
+        placeholder={"Enter maximum buy"}
+        min={0}
+        value={liquidity}
+        onChange={(e) => handleLiquidity(e.target.value)}
+        error={liquidityError != 'null' && <Form.Text className="text-danger">{liquidityError}</Form.Text>}
+      />
 
       <Form.Group className="mb-3" controlId="formStartTime">
         <Form.Label>Start Time (UTC)</Form.Label>
@@ -350,21 +335,30 @@ const Step2 = ({ description, setDescription, setStep }) => {
         />
       </Form.Group>
 
-      <Form.Text className="text-muted">
-        Need {hardcap * 2} {description.tokenName} to create launchpad.
-      </Form.Text><br />
-
-      <Form.Group className="mb-3" controlId="formMaxBuy">
-        <Form.Label>Liquidity lockup (days)*</Form.Label>
-        <Form.Control
-          type="number"
-          placeholder="Enter Liquidity lockup days"
-          min={0}
-          value={liquidityLockup}
-          onChange={(e) => handleLiquidityLockup(e.target.value)}
-        />
-      </Form.Group>
-      {liquidityLockupError != 'null' && <><Form.Text className="text-danger">{liquidityLockupError}</Form.Text><br/></>}
+      <Input
+        label={`Liquidity lockup (days)*`}
+        type={"number"}
+        placeholder={"Enter Liquidity lockup days"}
+        min={0}
+        value={liquidityLockup}
+        onChange={(e) => handleLiquidityLockup(e.target.value)}
+        error={liquidityLockupError != 'null' && <Form.Text className="text-danger">{liquidityLockupError}</Form.Text>}
+      />
+      <center>
+        <Form.Text>
+          Need {hardcap * 2} {description.tokenName} to create launchpad.
+        </Form.Text>
+      </center><br />
+      {/* <Input
+        label = {``}
+        type = {}
+        placeholder = {}
+        min={}
+        value = {}
+        onChange = {}
+        note = {}
+        error = {}
+      /> */}
 
       <Button variant="secondary" onClick={handlePrevious} className="me-2">
         Previous

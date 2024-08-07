@@ -6,7 +6,7 @@ import { useAccount } from 'wagmi';
 import { readContract } from '@wagmi/core';
 import { wagmiconfig } from '../../../wagmiconfig/wagmiconfig';
 import Input from '../../Input/Input';
-
+import abi from '../../../constants/erc20.json';
 const Step1 = ({ description, setDescription, setStep }) => {
     const { isConnected, chain } = useAccount();
     const [tokenAddress, setTokenAddress] = useState(description.tokenAddress || '');
@@ -17,54 +17,6 @@ const Step1 = ({ description, setDescription, setStep }) => {
     const [symbol, setSymbol] = useState(null);
     const [totalSupply, setTotalSupply] = useState(null);
     const [error, setError] = useState('');
-
-    const abi = [
-        {
-            "constant": true,
-            "inputs": [],
-            "name": "name",
-            "outputs": [{ "name": "", "type": "string" }],
-            "payable": false,
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "constant": true,
-            "inputs": [],
-            "name": "symbol",
-            "outputs": [{ "name": "", "type": "string" }],
-            "payable": false,
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "constant": true,
-            "inputs": [],
-            "name": "totalSupply",
-            "outputs": [{ "name": "", "type": "uint256" }],
-            "payable": false,
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "constant": true,
-            "inputs": [{ "name": "account", "type": "address" }],
-            "name": "balanceOf",
-            "outputs": [{ "name": "", "type": "uint256" }],
-            "payable": false,
-            "stateMutability": "view",
-            "type": "function"
-        },
-        {
-            "constant": true,
-            "inputs": [],
-            "name": "decimals",
-            "outputs": [{ "name": "", "type": "uint8" }],
-            "payable": false,
-            "stateMutability": "view",
-            "type": "function"
-        }
-    ];
 
     const verifyToken = async () => {
         if (!tokenAddress) return;

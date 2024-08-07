@@ -1,13 +1,30 @@
-import React from 'react'
+import React from 'react';
+import { Card } from 'react-bootstrap';
+import { FaFacebook, FaInstagram, FaLinkedin, FaPinterestSquare, FaYoutube } from 'react-icons/fa';
+import { BsTwitterX } from 'react-icons/bs';
 
 const HomePage = () => {
-  return (
-    <div className="maindiv">
-	<div className="container">
-	Lorem ipsum, dolor sit amet consectetur adipisicing elit. Suscipit, animi facere! Quia hic molestiae totam distinctio sint minus, id similique, consequuntur error tenetur perferendis dolores quod temporibus obcaecati animi sapiente maiores recusandae sit corrupti cupiditate? Officia praesentium nisi facilis perspiciatis illum veritatis. Amet corrupti voluptates doloribus laboriosam omnis earum nemo eligendi, nam at velit minima dicta corporis quas similique vitae numquam excepturi incidunt fugit saepe repellendus! Velit quisquam maxime provident in, esse omnis dolorem magnam amet error beatae architecto asperiores eaque perspiciatis fugiat et pariatur ut eius odio iusto cumque quasi voluptas officia tempora. Laboriosam quas vitae autem sint? Est.
-	</div>
-	</div>
-  )
-}
+	return (
+		<Card>
+			<Card.Body>
+				<Card>
+					<FaInstagram /> <FaFacebook /> <BsTwitterX /> <FaLinkedin /> <FaPinterestSquare /> <FaYoutube />
+				</Card>
+				<Card>
+					<Card.Title>PIPILOL</Card.Title>
+					<Card.Body>
 
-export default HomePage
+						Lorem ipsum, dolor sit amet consectetur adipisicing elit. Ipsam natus aut provident quod laborum repudiandae totam id eos aliquam, soluta culpa! Nisi velit eaque et ad, doloremque facilis temporibus architecto.
+					</Card.Body>
+				</Card>
+				<img
+					src="https://blog.millionero.com/wp-content/uploads/2023/08/millionero_uptrending_crypto_market_btc_usd_bullish_signs.jpg"
+					className="card-img"
+					alt="Main Image"
+				/>
+			</Card.Body>
+		</Card>
+	);
+};
+
+export default HomePage;

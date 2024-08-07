@@ -17,6 +17,7 @@ const Step2 = ({ description, setDescription, setStep }) => {
   const [listingRate, setListingRate] = useState(description.listingRate || null);
   const [startTime, setStartTime] = useState(description.startTime || '');
   const [endTime, setEndTime] = useState(description.endTime || '');
+  const [liquidityLockup, setLiquidityLockup] = useState(description.liquidityLockup || null);
 
   //Form features
   const [minTime, setMinTime] = useState('');
@@ -32,14 +33,37 @@ const Step2 = ({ description, setDescription, setStep }) => {
   }, []);
 
   //errors
-  const [presaleRateError, setPresaleRateError] = useState(null)
-  const [hardcapError, setHardcapError] = useState(null)
-  const [softcapError, setSoftcapError] = useState(null)
-  const [minBuyError, setMinBuyError] = useState(null)
-  const [maxBuyError, setMaxBuyError] = useState(null)
-  const [liquidityError, setLiquidityError] = useState(null)
-  const [listingRateError, setListingRateError] = useState(null)
-  const [endTimeError, setEndTimeError] = useState(null);
+  const [presaleRateError, setPresaleRateError] = useState('null')
+  const [hardcapError, setHardcapError] = useState('null')
+  const [softcapError, setSoftcapError] = useState('null')
+  const [minBuyError, setMinBuyError] = useState('null')
+  const [maxBuyError, setMaxBuyError] = useState('null')
+  const [liquidityError, setLiquidityError] = useState('null')
+  const [listingRateError, setListingRateError] = useState('null')
+  const [endTimeError, setEndTimeError] = useState('null');
+  const [liquidityLockupError, setLiquidityLockupError] = useState('null');
+
+  console.log({
+    "error":
+      presaleRateError ||
+      hardcapError ||
+      softcapError ||
+      minBuyError ||
+      maxBuyError ||
+      liquidityError ||
+      listingRateError ||
+      endTimeError
+  })
+  console.log({presaleRateError})
+  console.log({hardcapError})
+  console.log({softcapError})
+  console.log({minBuyError})
+  console.log({maxBuyError})
+  console.log({liquidityError})
+  console.log({listingRateError})
+  console.log({endTimeError})
+
+
 
   const handlePresaleRate = (value) => {
     if (value <= 0) {
@@ -57,6 +81,7 @@ const Step2 = ({ description, setDescription, setStep }) => {
       setHardcapError('Hardcap must be greater than hardcap!');
     } else {
       setHardcapError(null);
+      setSoftcapError(null);
     }
     setHardcap(value);
   };
@@ -65,8 +90,11 @@ const Step2 = ({ description, setDescription, setStep }) => {
     if (value <= 0) {
       setSoftcapError('Softcap must be positive number!');
     } else if (value <= 0.25 * hardcap) {
-      setSoftcapError('Softcap must be >= 25% of Hardcap!');
+      setSoftcapError('Softcap must be greater or equal to 25% of Hardcap!');
+    } else if (value > hardcap) {
+      setSoftcapError('Softcap must be less than to 25% of Hardcap!');
     } else {
+      setHardcapError(null);
       setSoftcapError(null);
     }
     setSoftcap(value);
@@ -79,6 +107,7 @@ const Step2 = ({ description, setDescription, setStep }) => {
       setMinBuyError('Minimum buy must be less than Maximum buy!');
     } else {
       setMinBuyError(null);
+      setMaxBuyError(null);
     }
     setMinBuy(value);
   };
@@ -89,6 +118,7 @@ const Step2 = ({ description, setDescription, setStep }) => {
     } else if (value <= minBuy) {
       setMaxBuyError('Maximum buy must be greater than Minimum buy!');
     } else {
+      setMinBuyError(null);
       setMaxBuyError(null);
     }
     setMaxBuy(value);
@@ -98,7 +128,7 @@ const Step2 = ({ description, setDescription, setStep }) => {
     setRefundType(value)
   }
 
-  const handleLiquidity= (value) => {
+  const handleLiquidity = (value) => {
     if (value <= 50) {
       setLiquidityError('Maximum buy must be greater than 50%!');
     } else {
@@ -107,7 +137,7 @@ const Step2 = ({ description, setDescription, setStep }) => {
     setLiquidity(value)
   }
 
-  const handleListingRate= (value) => {
+  const handleListingRate = (value) => {
     if (value <= 0) {
       setListingRateError('Maximum buy must be positive number!');
     } else {
@@ -129,6 +159,15 @@ const Step2 = ({ description, setDescription, setStep }) => {
     setEndTime(value);
   };
 
+  const handleLiquidityLockup = (value) => {
+    if (value <= 0) {
+      setLiquidityLockupError('Presale rate must be positive number!');
+    } else {
+      setLiquidityLockupError(null);
+    }
+    setLiquidityLockup(value);
+  };
+
   const handlePrevious = () => {
     setStep((prevStep) => prevStep - 1);
   }
@@ -144,6 +183,7 @@ const Step2 = ({ description, setDescription, setStep }) => {
       maxBuy,
       refundType,
       liquidity,
+      liquidityLockup,
       choosenAccount: address
     }));
     setStep((prevStep) => prevStep + 1);
@@ -175,8 +215,8 @@ const Step2 = ({ description, setDescription, setStep }) => {
       </Form.Group>
       <Form.Text>
         If I spend 1 {chain?.nativeCurrency?.symbol ? chain.nativeCurrency.symbol : 'crypto'}, how many tokens will I receive?
-      </Form.Text><br/>
-      {presaleRateError && <Form.Text className="text-danger">{presaleRateError}</Form.Text>}
+      </Form.Text><br />
+      {presaleRateError != 'null' && <Form.Text className="text-danger">{presaleRateError}</Form.Text>}
 
       <Form.Group className="mb-3" controlId="formWhitelist">
         <Form.Label>Whitelist</Form.Label>
@@ -206,7 +246,7 @@ const Step2 = ({ description, setDescription, setStep }) => {
           onChange={(e) => handleSoftcap(e.target.value)}
         />
       </Form.Group>
-      {softcapError && <Form.Text className="text-danger">{softcapError}</Form.Text>}
+      {softcapError != 'null' && <Form.Text className="text-danger">{softcapError}</Form.Text>}
 
       <Form.Group className="mb-3" controlId="formHardcap">
         <Form.Label>Hardcap ({chain?.nativeCurrency?.symbol ? chain.nativeCurrency.symbol : 'crypto'})*</Form.Label>
@@ -218,7 +258,7 @@ const Step2 = ({ description, setDescription, setStep }) => {
           onChange={(e) => handleHardcap(e.target.value)}
         />
       </Form.Group>
-      {hardcapError && <Form.Text className="text-danger">{hardcapError}</Form.Text>}
+      {hardcapError != 'null' && <Form.Text className="text-danger">{hardcapError}</Form.Text>}
 
       <Form.Group className="mb-3" controlId="formMinBuy">
         <Form.Label>Minimum buy ({chain?.nativeCurrency?.symbol ? chain.nativeCurrency.symbol : 'crypto'})*</Form.Label>
@@ -230,7 +270,7 @@ const Step2 = ({ description, setDescription, setStep }) => {
           onChange={(e) => handleMinBuy(e.target.value)}
         />
       </Form.Group>
-      {minBuyError && <Form.Text className="text-danger">{minBuyError}</Form.Text>}
+      {minBuyError != 'null' && <Form.Text className="text-danger">{minBuyError}</Form.Text>}
 
       <Form.Group className="mb-3" controlId="formMaxBuy">
         <Form.Label>Maximum buy ({chain?.nativeCurrency?.symbol ? chain.nativeCurrency.symbol : 'crypto'})*</Form.Label>
@@ -242,7 +282,7 @@ const Step2 = ({ description, setDescription, setStep }) => {
           onChange={(e) => handleMaxBuy(e.target.value)}
         />
       </Form.Group>
-      {maxBuyError && <Form.Text className="text-danger">{maxBuyError}</Form.Text>}
+      {maxBuyError != 'null' && <Form.Text className="text-danger">{maxBuyError}</Form.Text>}
 
       <Form.Group className="mb-3" controlId="formRefundType">
         <Form.Label>Refund Type</Form.Label>
@@ -261,7 +301,7 @@ const Step2 = ({ description, setDescription, setStep }) => {
           onChange={() => handleRefundType('Burn')}
         />
       </Form.Group>
-      
+
       <Form.Group className="mb-3" controlId="formMaxBuy">
         <Form.Label>Listing rate*</Form.Label>
         <Form.Control
@@ -275,7 +315,7 @@ const Step2 = ({ description, setDescription, setStep }) => {
       <Form.Text className="text-muted">
         1 {chain?.nativeCurrency?.symbol ? chain.nativeCurrency.symbol : 'crypto'} = {listingRate} {description.tokenName}
       </Form.Text><br />
-      {listingRateError && <Form.Text className="text-danger">{listingRateError}</Form.Text>}
+      {listingRateError != 'null'  && <Form.Text className="text-danger">{listingRateError}</Form.Text>}
 
       <Form.Group className="mb-3" controlId="formMaxBuy">
         <Form.Label>Liquidity (%)*</Form.Label>
@@ -287,7 +327,7 @@ const Step2 = ({ description, setDescription, setStep }) => {
           onChange={(e) => handleLiquidity(e.target.value)}
         />
       </Form.Group>
-      {liquidityError && <Form.Text className="text-danger">{liquidityError}</Form.Text>}
+      {liquidityError != 'null' && <Form.Text className="text-danger">{liquidityError}</Form.Text>}
 
       <Form.Group className="mb-3" controlId="formStartTime">
         <Form.Label>Start Time (UTC)</Form.Label>
@@ -314,6 +354,18 @@ const Step2 = ({ description, setDescription, setStep }) => {
         Need {hardcap * 2} {description.tokenName} to create launchpad.
       </Form.Text><br />
 
+      <Form.Group className="mb-3" controlId="formMaxBuy">
+        <Form.Label>Liquidity lockup (days)*</Form.Label>
+        <Form.Control
+          type="number"
+          placeholder="Enter Liquidity lockup days"
+          min={0}
+          value={liquidityLockup}
+          onChange={(e) => handleLiquidityLockup(e.target.value)}
+        />
+      </Form.Group>
+      {liquidityLockupError != 'null' && <><Form.Text className="text-danger">{liquidityLockupError}</Form.Text><br/></>}
+
       <Button variant="secondary" onClick={handlePrevious} className="me-2">
         Previous
       </Button>
@@ -328,7 +380,8 @@ const Step2 = ({ description, setDescription, setStep }) => {
           maxBuyError ||
           liquidityError ||
           listingRateError ||
-          endTimeError
+          endTimeError ||
+          liquidityLockupError
         )}
       >
         Next

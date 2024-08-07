@@ -5,6 +5,7 @@ import { FaEthereum } from 'react-icons/fa';
 import { useAccount } from 'wagmi';
 import { readContract } from '@wagmi/core';
 import { wagmiconfig } from '../../../wagmiconfig/wagmiconfig';
+import Input from '../../Input/Input';
 
 const Step1 = ({ description, setDescription, setStep }) => {
     const { isConnected, chain } = useAccount();
@@ -124,7 +125,7 @@ const Step1 = ({ description, setDescription, setStep }) => {
 
     return (
         <>
-            <Form.Group className="mb-3" controlId="formTokenAddress">
+            {/* <Form.Group className="mb-3">
                 <Form.Label>Token Address*</Form.Label>
 
                 <Form.Control
@@ -148,7 +149,29 @@ const Step1 = ({ description, setDescription, setStep }) => {
                 )}
                 {error && <Form.Text className="text-danger">{error}</Form.Text>}
 
-            </Form.Group>
+            </Form.Group> */}
+            <Input
+                label = {"Token Address*"}
+                type = {"text"}
+                placeholder = {"Input token address"}
+                value = {tokenAddress}
+                onChange = {(e) => setTokenAddress(e.target.value)}
+                note = {(name && symbol && totalSupply) ? (
+                    <Form.Text className="mb-3 text-muted">
+                        Name: {name} <br />
+                        Symbol: {symbol} <br />
+                        Total Supply: {totalSupply.toString()}
+                    </Form.Text>
+                ) : (
+                    <>
+                        <Form.Text className="mb-3 text-muted">
+                            Enter the token address and verify
+                        </Form.Text>
+                        <br />
+                    </>
+                )}
+                error = {error}
+            />
 
             <Form.Group className="mb-3" controlId="formCurrency">
                 <Form.Label>Currency</Form.Label>

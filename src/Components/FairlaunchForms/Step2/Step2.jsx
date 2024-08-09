@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Button, Dropdown, DropdownButton  } from 'react-bootstrap';
+import { Form, Button, Dropdown, DropdownButton } from 'react-bootstrap';
 import { useAccount } from 'wagmi';
 import Input from '../../Input/Input';
 
@@ -7,19 +7,16 @@ import Input from '../../Input/Input';
 const Step2 = ({ description, setDescription, setStep }) => {
   // console.log({description})
   const { isConnected, chain, address } = useAccount();
-  const [presaleRate, setPresaleRate] = useState(description.presaleRate || null);
+  const [totalSellingAmount, setTotalSellingAmount] = useState(description.totalSellingAmount || null);
   const [whitelist, setWhitelist] = useState(description.whitelist || 'Disable');
   const [softcap, setSoftcap] = useState(description.softcap || null);
-  const [hardcap, setHardcap] = useState(description.hardcap || null);
-  const [minBuy, setMinBuy] = useState(description.minBuy || null);
   const [maxBuy, setMaxBuy] = useState(description.maxBuy || null);
-  const [refundType, setRefundType] = useState(description.refundType || 'Refund');
   const [liquidity, setLiquidity] = useState(description.liquidity || null);
-  const [router, setRouter] = useState(description.router || null);
-  const [listingRate, setListingRate] = useState(description.listingRate || null);
   const [startTime, setStartTime] = useState(description.startTime || '');
   const [endTime, setEndTime] = useState(description.endTime || '');
   const [liquidityLockup, setLiquidityLockup] = useState(description.liquidityLockup || null);
+  const [router, setRouter] = useState(description.router || null);
+  const [enableMaxContribution, setEnableMaxContribution] = useState(false);
 
   //Form features
   const [minTime, setMinTime] = useState('');
@@ -35,103 +32,59 @@ const Step2 = ({ description, setDescription, setStep }) => {
   }, []);
 
   //errors
-  const [presaleRateError, setPresaleRateError] = useState('null')
-  const [hardcapError, setHardcapError] = useState('null')
+  const [totalSellingAmountError, setTotalSellingAmountError] = useState('null')
   const [softcapError, setSoftcapError] = useState('null')
-  const [minBuyError, setMinBuyError] = useState('null')
   const [maxBuyError, setMaxBuyError] = useState('null')
   const [liquidityError, setLiquidityError] = useState('null')
   const [routerError, setRouterError] = useState('null')
-  const [listingRateError, setListingRateError] = useState('null')
   const [endTimeError, setEndTimeError] = useState('null');
   const [liquidityLockupError, setLiquidityLockupError] = useState('null');
 
   // console.log({
   //   "error":
-  //     presaleRateError ||
-  //     hardcapError ||
+  //     totalSellingAmountError ||
   //     softcapError ||
-  //     minBuyError ||
   //     maxBuyError ||
   //     liquidityError ||
   //     routerError ||
-  //     listingRateError ||
   //     endTimeError
   // })
-  // console.log({ presaleRateError })
-  // console.log({ hardcapError })
+  // console.log({ totalSellingAmountError })
   // console.log({ softcapError })
-  // console.log({ minBuyError })
   // console.log({ maxBuyError })
   // console.log({ liquidityError })
   // console.log({ routerError })
-  // console.log({ listingRateError })
   // console.log({ endTimeError })
 
 
-
-  const handlePresaleRate = (value) => {
+  const handleTotalSellingAmount = (value) => {
     if (value <= 0) {
-      setPresaleRateError('Presale rate must be positive number!');
+      setTotalSellingAmountError('Presale rate must be positive number!');
     } else {
-      setPresaleRateError(null);
+      setTotalSellingAmountError(null);
     }
-    setPresaleRate(value);
+    setTotalSellingAmount(value);
   };
 
-  const handleHardcap = (value) => {
-    if (value <= 0) {
-      setHardcapError('Hardcap must be positive number!');
-    } else if (value <= softcap) {
-      setHardcapError('Hardcap must be greater than hardcap!');
-    } else {
-      setHardcapError(null);
-      setSoftcapError(null);
-    }
-    setHardcap(value);
-  };
 
   const handleSoftcap = (value) => {
     if (value <= 0) {
       setSoftcapError('Softcap must be positive number!');
-    } else if (value <= 0.25 * hardcap) {
-      setSoftcapError('Softcap must be greater or equal to 25% of Hardcap!');
-    } else if (value > hardcap) {
-      setSoftcapError('Softcap must be less than to 25% of Hardcap!');
     } else {
-      setHardcapError(null);
       setSoftcapError(null);
     }
     setSoftcap(value);
   };
 
-  const handleMinBuy = (value) => {
-    if (value <= 0) {
-      setMinBuyError('Minimum buy must be positive number!');
-    } else if (value >= maxBuy) {
-      setMinBuyError('Minimum buy must be less than Maximum buy!');
-    } else {
-      setMinBuyError(null);
-      setMaxBuyError(null);
-    }
-    setMinBuy(value);
-  };
-
   const handleMaxBuy = (value) => {
     if (value <= 0) {
       setMaxBuyError('Maximum buy must be positive number!');
-    } else if (value <= minBuy) {
-      setMaxBuyError('Maximum buy must be greater than Minimum buy!');
     } else {
-      setMinBuyError(null);
       setMaxBuyError(null);
     }
     setMaxBuy(value);
   };
 
-  const handleRefundType = (value) => {
-    setRefundType(value)
-  }
 
   const handleLiquidity = (value) => {
     if (value <= 50) {
@@ -151,15 +104,6 @@ const Step2 = ({ description, setDescription, setStep }) => {
     setRouter(value)
   }
 
-  const handleListingRate = (value) => {
-    if (value <= 0) {
-      setListingRateError('Maximum buy must be positive number!');
-    } else {
-      setListingRateError(null);
-    }
-    setListingRate(value)
-  }
-
   const handleStartTime = (value) => {
     setStartTime(value);
   };
@@ -175,7 +119,7 @@ const Step2 = ({ description, setDescription, setStep }) => {
 
   const handleLiquidityLockup = (value) => {
     if (value <= 30) {
-      setLiquidityLockupError('Lockup Days must be greater than 30 days!');
+      setLiquidityLockupError('Lockup Days rate must be greater than 30 days!');
     } else {
       setLiquidityLockupError(null);
     }
@@ -189,13 +133,10 @@ const Step2 = ({ description, setDescription, setStep }) => {
   const handleNext = () => {
     setDescription((prevDescription) => ({
       ...prevDescription,
-      presaleRate,
+      totalSellingAmount,
       whitelist,
-      hardcap,
       softcap,
-      minBuy,
       maxBuy,
-      refundType,
       router,
       liquidity,
       liquidityLockup,
@@ -219,14 +160,14 @@ const Step2 = ({ description, setDescription, setStep }) => {
   return (
     <>
       <Input
-        label={"Presale Rate*"}
+        label={"Total Selling Amount*"}
         type={"number"}
         placeholder={"Enter presale rate"}
         min={0}
-        value={presaleRate}
-        onChange={(e) => handlePresaleRate(e.target.value)}
+        value={totalSellingAmount}
+        onChange={(e) => handleTotalSellingAmount(e.target.value)}
         note={`If I spend 1 ${chain?.nativeCurrency?.symbol ? chain.nativeCurrency.symbol : 'crypto'}, how many tokens will I receive?`}
-        error={presaleRateError != 'null' && <Form.Text className="text-danger">{presaleRateError}</Form.Text>}
+        error={totalSellingAmountError != 'null' && <Form.Text className="text-danger">{totalSellingAmountError}</Form.Text>}
       />
 
       <Form.Group className="mb-3">
@@ -255,69 +196,28 @@ const Step2 = ({ description, setDescription, setStep }) => {
         min={0}
         value={softcap}
         onChange={(e) => handleSoftcap(e.target.value)}
-        note={"Softcap must be >= 25% of Hardcap!"}
         error={softcapError != 'null' && <Form.Text className="text-danger">{softcapError}</Form.Text>}
       />
 
-      <Input
-        label={`Hardcap (${chain?.nativeCurrency?.symbol ? chain.nativeCurrency.symbol : 'crypto'})*`}
-        type={"number"}
-        placeholder={"Enter hardcap"}
-        min={0}
-        value={hardcap}
-        onChange={(e) => handleHardcap(e.target.value)}
-
-        error={hardcapError != 'null' && <Form.Text className="text-danger">{hardcapError}</Form.Text>}
-      />
-
-      <Input
-        label={`Minimum buy (${chain?.nativeCurrency?.symbol ? chain.nativeCurrency.symbol : 'crypto'})*`}
-        type={"number"}
-        placeholder={"Enter minimum buy"}
-        min={0}
-        value={minBuy}
-        onChange={(e) => handleMinBuy(e.target.value)}
-        error={minBuyError != 'null' && <Form.Text className="text-danger">{minBuyError}</Form.Text>}
-      />
-
-      <Input
-        label={`Maximum buy (${chain?.nativeCurrency?.symbol ? chain.nativeCurrency.symbol : 'crypto'})*`}
-        type={"number"}
-        placeholder={"Enter maximum buy"}
-        min={0}
-        value={maxBuy}
-        onChange={(e) => handleMaxBuy(e.target.value)}
-        error={maxBuyError != 'null' && <Form.Text className="text-danger">{maxBuyError}</Form.Text>}
-      />
-
       <Form.Group className="mb-3">
-        <Form.Label>Refund Type</Form.Label>
         <Form.Check
-          type="radio"
-          id="refundTypeRefund"
-          label="Refund"
-          checked={refundType === 'Refund'}
-          onChange={() => handleRefundType('Refund')}
+          type="checkbox"
+          label="Setting max contribution?"
+          checked={enableMaxContribution}
+          onChange={() => setEnableMaxContribution(!enableMaxContribution)}
         />
-        <Form.Check
-          type="radio"
-          id="refundTypeBurn"
-          label="Burn"
-          checked={refundType === 'Burn'}
-          onChange={() => handleRefundType('Burn')}
-        />
+        {enableMaxContribution && (
+          <Input
+            label={`Maximum buy (${chain?.nativeCurrency?.symbol ? chain.nativeCurrency.symbol : 'crypto'})*`}
+            type="number"
+            placeholder="Enter maximum buy"
+            min={0}
+            value={maxBuy}
+            onChange={(e) => handleMaxBuy(e.target.value)}
+            error={maxBuyError !== 'null' && <Form.Text className="text-danger">{maxBuyError}</Form.Text>}
+          />
+        )}
       </Form.Group>
-
-      <Input
-        label={`Listing rate*`}
-        type={"number"}
-        placeholder={"Listing rate"}
-        min={0}
-        value={listingRate}
-        onChange={(e) => handleListingRate(e.target.value)}
-        note={`1 ${chain?.nativeCurrency?.symbol ? chain.nativeCurrency.symbol : 'crypto'} = ${listingRate ? listingRate : 0} ${description.tokenName}`}
-        error={listingRateError != 'null' && <Form.Text className="text-danger">{listingRateError}</Form.Text>}
-      />
 
       <Input
         label={`Liquidity (%)*`}
@@ -331,20 +231,21 @@ const Step2 = ({ description, setDescription, setStep }) => {
 
       <Form.Group className="mb-3">
         <Form.Label>Select Router Address*</Form.Label>
-        <DropdownButton id="" title={router || "Select a router"}>
-          <Dropdown.Item onClick={() => handleRouter("pancakeswap")}>
+        <DropdownButton id="" title={router||"Select a router"}>
+          <Dropdown.Item onClick={() => handleRouter("PancakeSwap")}>
             PancakeSwap
           </Dropdown.Item>
-          <Dropdown.Item onClick={() => handleRouter("uniswap")}>
+          <Dropdown.Item onClick={() => handleRouter("Uniswap")}>
             Uniswap
           </Dropdown.Item>
-          <Dropdown.Item onClick={() => handleRouter("apeswap")}>
+          <Dropdown.Item onClick={() => handleRouter("ApeSwap")}>
             ApeSwap
           </Dropdown.Item>
         </DropdownButton>
       </Form.Group>
 
-      <Form.Group className="mb-3" >
+
+      <Form.Group className="mb-3">
         <Form.Label>Start Time (UTC)</Form.Label>
         <Form.Control
           type="datetime-local"
@@ -376,8 +277,9 @@ const Step2 = ({ description, setDescription, setStep }) => {
       />
       <center>
         <Form.Text>
-          Need {hardcap * 2} {description.tokenName} to create launchpad.
+          Need {totalSellingAmount} {description.tokenName} to create launchpad.
         </Form.Text>
+        {/* Need to be checked */}
       </center><br />
       {/* <Input
         label = {``}
@@ -397,14 +299,11 @@ const Step2 = ({ description, setDescription, setStep }) => {
         variant="primary"
         onClick={handleNext}
         disabled={(
-          presaleRateError ||
-          hardcapError ||
+          totalSellingAmountError ||
           softcapError ||
-          minBuyError ||
           maxBuyError ||
           liquidityError ||
           routerError ||
-          listingRateError ||
           endTimeError ||
           liquidityLockupError
         )}

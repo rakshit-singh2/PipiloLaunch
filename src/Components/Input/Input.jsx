@@ -1,7 +1,7 @@
 import React from 'react';
 import { Form } from 'react-bootstrap';
 
-const Input = ({ label, type, placeholder, min = null, value, onChange, note = null, error }) => {
+const Input = ({ label, type, placeholder, min = null, value = null, onChange, note = null, error }) => {
     return (
         <>
             <Form.Group className="mb-3">

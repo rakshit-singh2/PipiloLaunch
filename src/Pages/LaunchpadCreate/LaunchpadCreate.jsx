@@ -17,7 +17,7 @@ const LaunchpadCreate = () => {
   return (
     <Card style={{ width: '100%', maxWidth: '600px', margin: 'auto', marginTop: '20px' }}>
       <Card.Body>
-        <center><Card.Title>Verify Token</Card.Title></center>
+        <center><Card.Title>Create Launchpad</Card.Title></center>
         <Progress currentStep={step} totalStep={4} />
         <Form>
           {step === 1 && (

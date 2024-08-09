@@ -12,7 +12,6 @@ const Step1 = ({ description, setDescription, setStep }) => {
     const [tokenAddress, setTokenAddress] = useState(description.tokenAddress || '');
     const [feeOption, setFeeOption] = useState(description.feeOption || `5% ${chain?.nativeCurrency?.symbol ? chain.nativeCurrency.symbol : 'crypto'} raised only`);
     const [currency, setCurrency] = useState(description.currency || chain?.nativeCurrency?.symbol ? chain.nativeCurrency.symbol : 'crypto');
-    const [listingOption, setListingOption] = useState(description.listingOption || 'Auto Listing');
     const [name, setName] = useState(null);
     const [symbol, setSymbol] = useState(null);
     const [totalSupply, setTotalSupply] = useState(null);
@@ -68,7 +67,6 @@ const Step1 = ({ description, setDescription, setStep }) => {
             tokenName: name,
             feeOption,
             currency,
-            listingOption,
             choosenChain: chain?.nativeCurrency.name
         }));
         setStep((prevStep) => prevStep + 1);
@@ -91,7 +89,7 @@ const Step1 = ({ description, setDescription, setStep }) => {
                 error={error}
             />
 
-            <Form.Group className="mb-3" controlId="formCurrency">
+            <Form.Group className="mb-3">
                 <Form.Label>Currency</Form.Label>
                 <DropdownButton id="dropdown-currency" title={currency||"Select"}>
                     <Dropdown.Item onClick={() => setCurrency(chain?.nativeCurrency?.symbol ? chain.nativeCurrency.symbol : 'crypto')}>
@@ -117,27 +115,6 @@ const Step1 = ({ description, setDescription, setStep }) => {
                     checked={feeOption === `2% ${chain?.nativeCurrency?.symbol ? chain.nativeCurrency.symbol : 'crypto'} raised + 2% token sold`}
                     onChange={() => setFeeOption(`2% ${chain?.nativeCurrency?.symbol ? chain.nativeCurrency.symbol : 'crypto'} raised + 2% token sold`)}
                 />
-            </Form.Group>
-
-            <Form.Group className="mb-3" controlId="formListingOptions">
-                <Form.Label>Listing Options</Form.Label>
-                <Form.Check
-                    type="radio"
-                    id="listingOptionAuto"
-                    label="Auto Listing"
-                    checked={listingOption === 'Auto Listing'}
-                    onChange={() => setListingOption('Auto Listing')}
-                />
-                <Form.Check
-                    type="radio"
-                    id="listingOptionManual"
-                    label="Manual Listing"
-                    checked={listingOption === 'Manual Listing'}
-                    onChange={() => setListingOption('Manual Listing')}
-                />
-                <Form.Text className="text-muted">
-                    For auto listing, after you finalize the pool your token will be auto listed on DEX.
-                </Form.Text>
             </Form.Group>
 
             {isConnected ? (

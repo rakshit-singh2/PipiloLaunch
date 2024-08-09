@@ -1,9 +1,59 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
+import Step1 from '../../Components/FairlaunchForms/Step1/Step1';
+import Step2 from '../../Components/FairlaunchForms/Step2/Step2';
+import Step3 from '../../Components/FairlaunchForms/Step3/Step3';
+import LastStep from '../../Components/LastStep/LastStep';
+import { Card, Form } from 'react-bootstrap';
+import Progress from '../../Components/Progress/Progress';
 
-const Fairlaunch = () => {
+
+const LaunchpadCreate = () => {
+
+  const [step, setStep] = useState(1);
+  const [description, setDescription] = useState({});
+  // console.log({description})
+  const handleSubmit = () => { setStep(1) };
+
   return (
-    <div className="container">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</div>
-  )
-}
+    <Card style={{ width: '100%', maxWidth: '600px', margin: 'auto', marginTop: '20px' }}>
+      <Card.Body>
+        <center><Card.Title>Create Launchpad</Card.Title></center>
+        <Progress currentStep={step} totalStep={4} />
+        <Form>
+          {step === 1 && (
+            <Step1
+              setStep={setStep}
+              description={description}
+              setDescription={setDescription}
+            />
+          )}
+          {step === 2 && (
+            <Step2
+              setStep={setStep}
+              description={description}
+              setDescription={setDescription}
+            />
+          )}
+          {step === 3 && (
+            <Step3
+              setStep={setStep}
+              description={description}
+              setDescription={setDescription}
+            />
+          )}
+          {step === 4 && (
+            <>
+              <LastStep
+                setStep={setStep}
+                description={description}
+                handleSubmit={handleSubmit}
+              />
+            </>
+          )}
+        </Form>
+      </Card.Body>
+    </Card>
+  );
+};
 
-export default Fairlaunch
+export default LaunchpadCreate;
